@@ -5,6 +5,39 @@ Sisaldab admin paneeli menüühalduseks ja töötavat kontaktivormi.
 
 ---
 
+## Tehnoloogia valik: Node.js + Express
+
+### Miks Node.js?
+
+Node.js on JavaScripti käituskeskkond, mis töötab serveripoolselt V8 mootoril. Selle projekti jaoks oli Node.js loogiline valik mitmel põhjusel.
+
+**Eelised:**
+
+- **Ühtne keel kogu stackis.** Nii frontend (React) kui backend on kirjutatud JavaScriptis. See tähendab, et andmetüübid, valideerimisloogika ja utiliidid on kergesti jagatavad mõlema osapoole vahel ilma keeltevahelise konverteerimiseta.
+- **Suur ökosüsteem (npm).** npm-is on üle 2 miljoni paketi. Selle projekti vajadused — sessioonihalldus, failiüleslaadimine, e-posti saatmine, andmebaas, CSRF-kaitse — kõik said lahendatud küpsete, hästi hooldatud pakettidega ilma midagi nullist kirjutamata.
+- **Kiire arendus.** Express on minimalistlik raamistik ilma range struktuurita. Ruutide, vahevara ja vaadete lisamine on kiire ja paindlik, mis sobib hästi väiksema mahuga projektile nagu restoran-admin paneel.
+- **Asünkroonne I/O.** Node.js sündmuspõhine mudel sobib hästi veebirakendustele, kus enamik aega kulub I/O-le (andmebaasipäringud, e-posti saatmine), mitte arvutustele.
+- **Lihtne juurutamine.** Node.js rakendus vajab ainult `node server.js` käsku — ei ole vaja eraldi veebiserver (Apache/Nginx) seadistada arenduse ajal.
+
+**Miinused:**
+
+- **Ei sobi arvutusmahukatele ülesannetele.** Node.js on ühe lõimega (single-threaded). Kui rakendus peaks tegema keerulisi arvutusi (nt piltide töötlemine, ML), blokeeritaks kogu server. Selle projekti jaoks see probleem ei kehti.
+- **Callback / async keerukus.** Asünkroonse koodi kirjutamine (`async/await`, Promise-id) on algajatele raskem kui sünkroonne kood Pythonis või PHP-s. Vead on raskemini leitavad.
+- **Lahtise struktuuriga raamistik.** Express ei sunni ühtegi arhitektuurimustrit peale. Suuremas projektis võib see viia korratu koodini, kui arendaja ise head konventsioonid ei vali. NestJS (Angular-stiilis) lahendab selle, kuid on keerulisem.
+
+### Alternatiivid ja miks neist loobuti
+
+| Alternatiiv | Põhjus, miks ei valitud |
+|---|---|
+| **Python + Django** | Tugevam struktuur, kuid erinev keel frontendist; aeglasem protüüpimine väikeses projektis |
+| **PHP + Laravel** | Küps ja populaarne, kuid ei kasuta JavaScript ökosüsteemi; suurem õppimiskõver |
+| **Node.js + NestJS** | Sobib paremini suurele meeskonnale; liiga palju boilerplate'i lihtsa admin paneeli jaoks |
+| **Node.js + Fastify** | Kiirem kui Express, kuid väiksem ökosüsteem ja vähem õppematerjale |
+
+**Kokkuvõte:** Node.js + Express pakub selle projekti skaalal parima tasakaalu kiire arenduse, JavaScripti ühtsuse ja küpsete turvateekide vahel.
+
+---
+
 ## Nõutav tarkvara
 
 | Tarkvara | Versioon | Allalaadimislink |
