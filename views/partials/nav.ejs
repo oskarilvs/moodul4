@@ -21,6 +21,7 @@
       <div class="d-flex align-items-center gap-3">
         <span class="text-light opacity-75 small"><%= admin %></span>
         <form action="/admin/logout" method="POST" class="m-0">
+          <input type="hidden" name="_csrf" value="<%= csrfToken %>">
           <button class="btn btn-outline-light btn-sm">Logi välja</button>
         </form>
       </div>

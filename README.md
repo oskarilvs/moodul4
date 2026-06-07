@@ -196,3 +196,79 @@ moodul4/
 | `multer` | Pildifailide üleslaadimine |
 | `nodemailer` | E-posti saatmine |
 | `dotenv` | Keskkonna muutujad |
+| `concurrently` | Backend + frontend samaaegne käivitamine |
+
+---
+
+## Turvalisus
+
+### Paroolid räsitud (bcrypt)
+Admin parool salvestatakse andmebaasi `bcrypt` räsina (cost factor 10).  
+Avateksti parooli **ei salvestata** kunagi.
+
+```javascript
+// Räsimine (db.js / seed.js)
+const hash = bcrypt.hashSync(password, 10);
+
+// Kontrollimine (admin.js)
+bcrypt.compareSync(inputPassword, storedHash)
+```
+
+### SQL-i süsti kaitse — parameetritega päringud
+Kõik andmebaasipäringud kasutavad `better-sqlite3` ettevalmistatud lauseid (`prepare().run(...)` / `.get(...)`). Kasutaja sisend **ei ühildu** kunagi otse SQL-stringiga.
+
+```javascript
+// ✅ Õige — parameetriga
+db.prepare('SELECT * FROM admins WHERE email = ?').get(email)
+
+// ❌ Vale — string konkatenatsioon (ei kasutata)
+db.prepare(`SELECT * FROM admins WHERE email = '${email}'`)
+```
+
+### Serveripoolne sisendi valideerimine
+Kõik vormid valideeritakse serveris (`middleware/validate.js`):
+
+| Väli | Kontrollid |
+|---|---|
+| Nimi | kohustuslik, max 120 märki |
+| E-post | kohustuslik, regex formaat, max 254 märki |
+| Teema | max 200 märki |
+| Sõnum | kohustuslik, max 5000 märki |
+| Hind | kohustuslik, arv, vahemik 0–10 000 |
+| Vürtsisus | täisarv, vahemik 0–3 |
+| Kategooria | peab kuuluma lubatud loendisse |
+| ID parameetrid | valideeritakse positiivse täisarvuna |
+
+### CSRF-kaitse
+Kõik oleku muutvad vormid (login, lisa/muuda/kustuta roog, kustuta sõnum, logout) sisaldavad varjatud CSRF-tokeni välja.
+
+Token genereeritakse sessiooni loomisel (`crypto.randomBytes(32)`) ja kontrollitakse iga POST päringu töötlemisel. Kehtetu tokeniga päring saab `403 Forbidden` vastuse.
+
+Pärast edukat sisselogimist **regenereeritakse sessioon** (kaitse session fixation rünnakute vastu).
+
+### Saladused keskkonnamuutujates
+`.env` fail on `.gitignore`-is ja **ei jõua** kunagi repositooriumisse.  
+Koodis ei ole ühtegi parooli, API võtit ega muud saladust.
+
+```
+.env             ← ainult kohalik, gitignore'd
+.env.example     ← näidis ilma pärisväärtusteta, gitis OK
+```
+
+---
+
+## Andmebaasi struktuur
+
+Skeem asub failis `database/schema.sql`. Tabelid luuakse automaatselt serveri esimesel käivitamisel (`database/db.js`).
+
+Käsitsi andmebaasi loomiseks:
+
+```bash
+sqlite3 database/shoyu.db < database/schema.sql
+```
+
+| Tabel | Sisu |
+|---|---|
+| `admins` | Admin kasutajad (bcrypt parooliga) |
+| `menu_items` | Menüükirjed koos kõigi väljadega |
+| `contact_messages` | Kontaktivormist saadetud sõnumid |

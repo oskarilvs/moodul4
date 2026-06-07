@@ -49,6 +49,7 @@
                     method="POST"
                     onsubmit="return confirm('Kustuta sõnum?')"
                   >
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
                     <button class="btn btn-sm btn-outline-danger">Kustuta</button>
                   </form>
                 </td>

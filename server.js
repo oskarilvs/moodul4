@@ -4,6 +4,7 @@ const session = require('express-session');
 const path = require('path');
 const fs = require('fs');
 const { ensureAdmin } = require('./database/db');
+const { csrfMiddleware } = require('./middleware/csrf');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -26,6 +27,8 @@ app.use(
     cookie: { maxAge: 8 * 60 * 60 * 1000 },
   }),
 );
+
+app.use(csrfMiddleware);
 
 app.use('/admin', require('./routes/admin'));
 app.use('/api/menu', require('./routes/api/menu'));

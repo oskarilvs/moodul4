@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const nodemailer = require('nodemailer');
 const { db } = require('../../database/db');
+const { validateContactForm, escapeHtml } = require('../../middleware/validate');
 
 function createTransporter() {
   return nodemailer.createTransport({
@@ -17,37 +18,38 @@ function createTransporter() {
 
 router.post('/', async (req, res) => {
   const { name, email, subject, message } = req.body;
+  const errors = validateContactForm({ name, email, subject, message });
 
-  if (!name || !email || !message) {
-    return res.status(400).json({ error: 'Nimi, e-post ja sõnum on kohustuslikud' });
+  if (errors.length > 0) {
+    return res.status(400).json({ error: errors[0] });
   }
 
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  if (!emailRegex.test(email)) {
-    return res.status(400).json({ error: 'Vigane e-posti aadress' });
-  }
+  const cleanName = name.trim();
+  const cleanEmail = email.trim().toLowerCase();
+  const cleanSubject = (subject || '').trim();
+  const cleanMessage = message.trim();
 
   db.prepare(
     'INSERT INTO contact_messages (name, email, subject, message) VALUES (?, ?, ?, ?)',
-  ).run(name.trim(), email.trim(), (subject || '').trim(), message.trim());
+  ).run(cleanName, cleanEmail, cleanSubject, cleanMessage);
 
   if (process.env.MAIL_USER && process.env.MAIL_PASS) {
     try {
       const transporter = createTransporter();
       await transporter.sendMail({
-        from: `"${name}" <${process.env.MAIL_USER}>`,
+        from: `"SHOYU & CO." <${process.env.MAIL_USER}>`,
         to: process.env.MAIL_TO || process.env.MAIL_USER,
-        replyTo: email,
-        subject: subject ? `[SHOYU] ${subject}` : '[SHOYU] Uus kontaktisõnum',
+        replyTo: cleanEmail,
+        subject: cleanSubject ? `[SHOYU] ${cleanSubject}` : '[SHOYU] Uus kontaktisõnum',
         html: `
           <h2>Uus sõnum kontaktivormist</h2>
-          <table>
-            <tr><td><strong>Nimi:</strong></td><td>${name}</td></tr>
-            <tr><td><strong>E-post:</strong></td><td>${email}</td></tr>
-            <tr><td><strong>Teema:</strong></td><td>${subject || '—'}</td></tr>
+          <table cellpadding="6">
+            <tr><td><strong>Nimi:</strong></td><td>${escapeHtml(cleanName)}</td></tr>
+            <tr><td><strong>E-post:</strong></td><td>${escapeHtml(cleanEmail)}</td></tr>
+            <tr><td><strong>Teema:</strong></td><td>${escapeHtml(cleanSubject) || '—'}</td></tr>
           </table>
           <h3>Sõnum:</h3>
-          <p>${message.replace(/\n/g, '<br>')}</p>
+          <p style="white-space:pre-wrap">${escapeHtml(cleanMessage)}</p>
         `,
       });
     } catch (err) {
