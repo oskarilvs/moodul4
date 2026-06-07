@@ -18,10 +18,9 @@ export function Navbar() {
       <div className="flex items-center justify-between py-6">
         <Link
           to="/"
-          className="font-serif text-[27px] font-bold leading-[1.2] text-accent"
           onClick={() => setOpen(false)}
         >
-          SHOYU &amp; CO.
+          <img src="/media/logo.png" alt="Shoyu & Co." className="h-[32px] w-auto" />
         </Link>
 
         <nav className="hidden items-center gap-8 text-[16px] font-medium uppercase tracking-[0.32px] lg:flex">

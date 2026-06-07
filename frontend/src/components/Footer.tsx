@@ -12,9 +12,7 @@ export function Footer() {
         <div className="mx-auto w-full max-w-[1252px] px-6 py-12 lg:px-0">
           <div className="flex flex-col gap-8 lg:flex-row lg:justify-between">
             <div className="max-w-[390px]">
-              <p className="font-serif text-[27px] font-bold leading-[1.2] text-accent">
-                SHOYU &amp; CO.
-              </p>
+              <img src="/media/logo.png" alt="Shoyu & Co." className="h-[32px] w-auto" />
               <p className="mt-6 text-[16px] leading-normal text-muted">
                 Autentne öine ramen-baar, kus kohtuvad traditsioonid ja tänapäevane
                 tänavatoidukultuur.

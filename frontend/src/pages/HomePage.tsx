@@ -154,7 +154,7 @@ export function HomePage() {
         <div className="absolute inset-0 bg-black/65" />
         <div className="relative z-10 mx-auto flex max-w-[581px] flex-col items-center gap-8 px-6 text-center">
           <div className="flex flex-col gap-6">
-            <h1 className="font-serif text-[72px] font-bold leading-none text-white">
+            <h1 className="whitespace-nowrap font-serif text-[72px] font-bold leading-none text-white">
               Öine <span className="italic text-accent">Ramen</span> Baar
             </h1>
             <p className="text-[16px] text-muted">
