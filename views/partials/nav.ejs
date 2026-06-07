@@ -1,0 +1,29 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bold" href="/admin">
+      🍜 SHOYU Admin
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="nav">
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="/admin">Töölaud</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/menu">Menüü</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/admin/messages">Sõnumid</a>
+        </li>
+      </ul>
+      <div class="d-flex align-items-center gap-3">
+        <span class="text-light opacity-75 small"><%= admin %></span>
+        <form action="/admin/logout" method="POST" class="m-0">
+          <button class="btn btn-outline-light btn-sm">Logi välja</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</nav>
