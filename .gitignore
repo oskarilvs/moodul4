@@ -1,7 +1,9 @@
 node_modules/
+frontend/node_modules/
 .env
 database/*.db
 database/*.db-shm
 database/*.db-wal
 public/uploads/*
 !public/uploads/.gitkeep
+public/dist/

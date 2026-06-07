@@ -2,10 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const session = require('express-session');
 const path = require('path');
+const fs = require('fs');
 const { ensureAdmin } = require('./database/db');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const DIST = path.join(__dirname, 'public', 'dist');
 
 ensureAdmin();
 
@@ -29,9 +31,18 @@ app.use('/admin', require('./routes/admin'));
 app.use('/api/menu', require('./routes/api/menu'));
 app.use('/api/contact', require('./routes/api/contact'));
 
-app.get('/', (_req, res) => res.redirect('/admin'));
+// Serve built React frontend (SPA)
+if (fs.existsSync(DIST)) {
+  app.use(express.static(DIST));
+  app.get('/{*path}', (req, res, next) => {
+    if (req.path.startsWith('/admin') || req.path.startsWith('/api')) return next();
+    res.sendFile(path.join(DIST, 'index.html'));
+  });
+} else {
+  app.get('/', (_req, res) => res.redirect('/admin'));
+}
 
-app.use((req, res) => {
+app.use((_req, res) => {
   res.status(404).send(`
     <html><body style="font-family:sans-serif;text-align:center;padding:3rem">
       <h1>404 — Lehte ei leitud</h1>
