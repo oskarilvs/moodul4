@@ -4,7 +4,7 @@
   "description": "SHOYU & CO. ramen baar — Node.js backend admin paneeli ja API-ga",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "node database/seed.js && node server.js",
     "dev": "node --watch server.js",
     "seed": "node database/seed.js",
     "frontend:dev": "cd frontend && npm run dev",
