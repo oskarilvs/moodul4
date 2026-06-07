@@ -9,7 +9,7 @@
     "seed": "node database/seed.js",
     "frontend:dev": "cd frontend && npm run dev",
     "frontend:build": "cd frontend && npm run build",
-    "build": "cd frontend && npm run build",
+    "build": "cd frontend && npm install && npm run build",
     "dev:all": "concurrently --names \"backend,frontend\" --prefix-colors \"cyan,magenta\" \"npm run dev\" \"npm run frontend:dev\""
   },
   "keywords": [
