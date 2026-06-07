@@ -9,9 +9,15 @@
     "seed": "node database/seed.js",
     "frontend:dev": "cd frontend && npm run dev",
     "frontend:build": "cd frontend && npm run build",
-    "build": "cd frontend && npm run build"
+    "build": "cd frontend && npm run build",
+    "dev:all": "concurrently --names \"backend,frontend\" --prefix-colors \"cyan,magenta\" \"npm run dev\" \"npm run frontend:dev\""
   },
-  "keywords": ["restaurant", "nodejs", "express", "admin"],
+  "keywords": [
+    "restaurant",
+    "nodejs",
+    "express",
+    "admin"
+  ],
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -23,5 +29,8 @@
     "express-session": "^1.18.1",
     "multer": "^2.0.0",
     "nodemailer": "^6.10.1"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.3"
   }
 }
