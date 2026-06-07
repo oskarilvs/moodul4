@@ -1,0 +1,24 @@
+{
+  "name": "shoyu-backend",
+  "version": "1.0.0",
+  "description": "SHOYU & CO. ramen baar — Node.js backend admin paneeli ja API-ga",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js",
+    "seed": "node database/seed.js"
+  },
+  "keywords": ["restaurant", "nodejs", "express", "admin"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.10.0",
+    "dotenv": "^16.5.0",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-session": "^1.18.1",
+    "multer": "^2.0.0",
+    "nodemailer": "^6.10.1"
+  }
+}
