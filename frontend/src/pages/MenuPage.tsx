@@ -78,12 +78,6 @@ export function MenuPage() {
     return items
   }, [allItems, activeCategory, spicyOnly, sortOrder])
 
-  const cycleSort = () => {
-    setSortOrder((s) => (s === 'default' ? 'asc' : s === 'asc' ? 'desc' : 'default'))
-  }
-
-  const sortLabel = sortOrder === 'asc' ? 'Hind ↑' : sortOrder === 'desc' ? 'Hind ↓' : 'Sorteeri'
-
   return (
     <div className="pb-24">
       <section className="mx-auto max-w-[610px] px-6 pt-24 text-center">
@@ -140,14 +134,19 @@ export function MenuPage() {
                 </span>
               </label>
 
-              <button
-                type="button"
-                onClick={cycleSort}
-                className={`flex items-center gap-4 bg-bg px-6 py-3 text-[12px] font-medium uppercase tracking-[-0.12px] transition-colors ${sortOrder !== 'default' ? 'text-accent' : 'text-white'}`}
-              >
-                {sortLabel}
-                <ChevronDown className="size-3" />
-              </button>
+              <div className="relative">
+                <select
+                  value={sortOrder}
+                  onChange={(e) => setSortOrder(e.target.value as SortOrder)}
+                  aria-label="Sorteeri hinnaga"
+                  className={`cursor-pointer appearance-none bg-bg py-3 pl-6 pr-10 text-[12px] font-medium uppercase tracking-[-0.12px] outline-none transition-colors ${sortOrder !== 'default' ? 'text-accent' : 'text-white'}`}
+                >
+                  <option value="default">Sorteeri</option>
+                  <option value="asc">Hind ↑</option>
+                  <option value="desc">Hind ↓</option>
+                </select>
+                <ChevronDown className="pointer-events-none absolute right-4 top-1/2 size-3 -translate-y-1/2 text-current" />
+              </div>
             </div>
           </div>
         </div>
