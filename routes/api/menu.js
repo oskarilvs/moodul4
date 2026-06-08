@@ -12,9 +12,18 @@ router.get('/', (req, res) => {
     params.push(category);
   }
 
+  const categoryOrder = `CASE category
+    WHEN 'Eripakkumised' THEN 1
+    WHEN 'Eelroad & Suupisted' THEN 2
+    WHEN 'Ramen' THEN 3
+    WHEN 'Kõrvale' THEN 4
+    WHEN 'Magustoit' THEN 5
+    WHEN 'Joogid' THEN 6
+    ELSE 7 END`;
+
   if (sort === 'asc') query += ' ORDER BY price ASC';
   else if (sort === 'desc') query += ' ORDER BY price DESC';
-  else query += ' ORDER BY category, name';
+  else query += ` ORDER BY ${categoryOrder}, name`;
 
   const items = db.prepare(query).all(...params);
 
@@ -29,7 +38,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/categories', (req, res) => {
-  const rows = db.prepare('SELECT DISTINCT category FROM menu_items ORDER BY category').all();
+  const rows = db.prepare(`SELECT DISTINCT category FROM menu_items ORDER BY
+    CASE category
+      WHEN 'Eripakkumised' THEN 1
+      WHEN 'Eelroad & Suupisted' THEN 2
+      WHEN 'Ramen' THEN 3
+      WHEN 'Kõrvale' THEN 4
+      WHEN 'Magustoit' THEN 5
+      WHEN 'Joogid' THEN 6
+      ELSE 7 END`).all();
   res.json(['Kõik', ...rows.map((r) => r.category)]);
 });
 

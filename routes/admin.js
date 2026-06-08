@@ -85,7 +85,15 @@ router.get('/', requireLogin, (req, res) => {
 // ── Menu — list ──────────────────────────────────────────────────────────────
 
 router.get('/menu', requireLogin, (req, res) => {
-  const items = db.prepare('SELECT * FROM menu_items ORDER BY category, name').all();
+  const items = db.prepare(`SELECT * FROM menu_items ORDER BY
+    CASE category
+      WHEN 'Eripakkumised' THEN 1
+      WHEN 'Eelroad & Suupisted' THEN 2
+      WHEN 'Ramen' THEN 3
+      WHEN 'Kõrvale' THEN 4
+      WHEN 'Magustoit' THEN 5
+      WHEN 'Joogid' THEN 6
+      ELSE 7 END, name`).all();
   res.render('menu/index', { items, admin: req.session.adminEmail });
 });
 
