@@ -108,7 +108,7 @@ router.get('/menu/new', requireLogin, (req, res) => {
   });
 });
 
-router.post('/menu/new', requireLogin, verifyCsrf, upload.single('image'), (req, res) => {
+router.post('/menu/new', requireLogin, upload.single('image'), verifyCsrf, (req, res) => {
   const errors = validateMenuForm(req.body);
 
   if (errors.length > 0) {
@@ -151,7 +151,7 @@ router.get('/menu/:id/edit', requireLogin, (req, res) => {
   res.render('menu/form', { item, error: null, admin: req.session.adminEmail, categories: ALLOWED_CATEGORIES });
 });
 
-router.post('/menu/:id/edit', requireLogin, verifyCsrf, upload.single('image'), (req, res) => {
+router.post('/menu/:id/edit', requireLogin, upload.single('image'), verifyCsrf, (req, res) => {
   if (!isPositiveInt(req.params.id)) return res.redirect('/admin/menu');
   const id = parseInt(req.params.id);
   const errors = validateMenuForm(req.body);
